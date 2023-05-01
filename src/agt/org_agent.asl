@@ -27,7 +27,11 @@ sch_name("monitoring_scheme"). // the agent beliefs that it can manage schemes w
   focus(GroupArtId)[wid(WspOrg)];
   createScheme(SchemeName, monitoring_scheme, SchArtId);
   debug(inspector_gui(on))[artifact_id(SchArtId)];
-  focus(SchArtId)[wid(WspOrg)].
+  focus(SchArtId)[wid(WspOrg)];
+  .broadcast(tell, org_name(OrgName)[artifact_id(OrgArtId)]);
+  ?formationStatus(ok)[artifact_id(GroupArtId)]; 
+  addScheme(SchemeName)[artifact_id(GroupArtId)];
+  .print("Scheme ", SchemeName, " added to group ", GroupName).
 
 /* 
  * Plan for reacting to the addition of the test-goal ?formationStatus(ok)
