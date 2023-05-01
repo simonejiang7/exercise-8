@@ -29,22 +29,6 @@ sch_name("monitoring_scheme"). // the agent beliefs that it can manage schemes w
   debug(inspector_gui(on))[artifact_id(SchArtId)];
   focus(SchArtId)[wid(WspOrg)].
 
-// !create_and_join_workspace. 
-
-//  task 1.1, 1.2
-// @create_and_join_workspace_plan
-// +!create_and_join_workspace : org_name(OrgName) & group_name(GroupName) & sch_name(SchemeName) <-
-//   .print("Creating and joining workspace for organization ", OrgName);
-//   createWorkspace(OrgName);
-//   joinWorkspace(OrgName, WspID1);
-//   makeArtifact(OrgName,"ora4mas.nopl.OrgBoard",["src/org/org-spec.xml"],OrgArtId);
-//   focus(OrgArtId);
-//   createGroup(GroupName, monitoringteam, GroupArtId);
-//   focus(GroupArtId);
-//   createScheme(SchemeName, monitoringteam, SchemeArtId);
-//   focus(SchemeArtId).
-
-
 /* 
  * Plan for reacting to the addition of the test-goal ?formationStatus(ok)
  * Triggering event: addition of goal ?formationStatus(ok)
