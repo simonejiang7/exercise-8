@@ -4,7 +4,7 @@
 /* Initial beliefs and rules */
 // my_group(monitoring_team).
 // my_scheme(monitoring_scheme).
-// my_role("temperature_reader").
+my_role("temperature_reader").
 
 /* Initial goals */
 !start. // the agent has the goal to start
@@ -28,9 +28,9 @@
 	lookupArtifact(OrgName, OrgId);
 	focus(OrgId).
 
-+group(GroupName,_,GroupId)[artifact_id(OrgName)]: true <-
++group(GroupName,_,GroupId)[artifact_id(OrgName)]: my_role(Role) <-
 	.print("Notified about new group: ", GroupName);
-	adoptRole(temperature_reader)[artifact_id(GroupId)].
+	adoptRole(Role)[artifact_id(GroupId)].
 
 +scheme(SchemeName, _, SchId)[artifact_id(OrgName)]: true <-
 	focus(SchId);
@@ -38,7 +38,6 @@
 
 +specification[artifact_id(OrgName)]: true <-
 	.print("Notified about new specification").
-
 
 +!execute : group(GroupName,_,GroupId)[artifact_id(OrgName)] <-
 	!read_temperature.
