@@ -43,7 +43,6 @@ role(R,Super) :-
 +!setupOrg(OrgArtId): org_name(OrgName) <-
   makeArtifact(OrgName, "ora4mas.nopl.OrgBoard", ["src/org/org-spec.xml"], OrgArtId)[wid(WspOrg)];
   focus(OrgArtId)[wid(WspOrg)];
-  .wait(15000);
   .broadcast(tell, new_organization_notification(OrgName)).
 
 
@@ -58,11 +57,9 @@ role(R,Super) :-
 @test_formation_status_is_ok_plan
 +?formationStatus(ok)[artifact_id(G)] : group(GroupName,_,G)[artifact_id(OrgName)] & role(R,Super)<-
   .print("Waiting for group ", GroupName," to become well-formed");
-  .wait(2000);
+  .wait(15000);
   .print("Role ", R, " to be adopted ...");
   .broadcast(tell, available_role(R, OrgName));
-  
-  // .send(acting_agent,tell,ask_agent_adopt_role(R, OrgName));
   .wait({+formationStatus(ok)[artifact_id(G)]}). // waits until the belief is added in the belief base
 
 /* 
