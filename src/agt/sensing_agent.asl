@@ -2,9 +2,9 @@
 
 
 /* Initial beliefs and rules */
-my_group(monitoring_team).
-my_scheme(monitoring_scheme).
-my_role("temperature_reader").
+// my_group(monitoring_team).
+// my_scheme(monitoring_scheme).
+// my_role("temperature_reader").
 
 /* Initial goals */
 !start. // the agent has the goal to start
@@ -18,22 +18,19 @@ my_role("temperature_reader").
 @start_plan
 +!start : true <-
 	.print("Hello world");
-	.wait(3000).
+	.wait(3000);
+	!execute.
+	
 
 +new_organization_notification(OrgName) : true <-
 	.print("Notified about new organization: ", OrgName);
 	joinWorkspace(OrgName,WspOrg);
 	lookupArtifact(OrgName, OrgId);
 	focus(OrgId).
-	// adoptRole(temperature_manifestor)[artifact_id(OrgId)].
-	// adopt_role(temperature_manifestor)[artifact_id(OrgId)].
-	// !adopt_relevant_roles.
 
 +group(GroupName,_,GroupId)[artifact_id(OrgName)]: true <-
-	// lookupArtifact(GroupName, GroupId);
 	.print("Notified about new group: ", GroupName);
-	adoptRole(temperature_reader)[artifact_id(GroupId)];
-	!read_temperature.
+	adoptRole(temperature_reader)[artifact_id(GroupId)].
 
 +scheme(SchemeName, _, SchId)[artifact_id(OrgName)]: true <-
 	focus(SchId);
@@ -42,12 +39,9 @@ my_role("temperature_reader").
 +specification[artifact_id(OrgName)]: true <-
 	.print("Notified about new specification").
 
-// @adopt_relevant_roles
-// +!adopt_relevant_roles : group(,_,G)[artifact_id(OrgName)] <-
-// 	.print("Group: ").
-	// .print("Adopting relevant roles");
 
-	// !adopt_role(Role)
++!execute : group(GroupName,_,GroupId)[artifact_id(OrgName)] <-
+	!read_temperature.
 
 /* 
  * Plan for reacting to the addition of the goal !read_temperature
@@ -55,7 +49,6 @@ my_role("temperature_reader").
  * Context: true (the plan is always applicable)
  * Body: reads the temperature using a weather station artifact and broadcasts the reading
 */
-
 
 @read_temperature_plan
 +!read_temperature : true <-

@@ -30,7 +30,6 @@ robot_td("https://raw.githubusercontent.com/Interactions-HSG/example-tds/main/td
  +ask_agent_adopt_role(R, OrgName): group(GroupName,_,GroupId)[artifact_id(OrgName)] <-
 	adoptRole(R)[artifact_name(GroupName)];
 	.print("Adopted role: ", R);
-	.wait(5000);
 	!manifest_temperature.
 
 
@@ -45,7 +44,6 @@ robot_td("https://raw.githubusercontent.com/Interactions-HSG/example-tds/main/td
 @manifest_temperature_plan 
 +!manifest_temperature : temperature(Celcius) & robot_td(Location) <-
 	.print("I will manifest the temperature: ", Celcius);
-	// .wait(5000);
 	makeArtifact("covnerter", "tools.Converter", [], ConverterId); // creates a converter artifact
 	convert(Celcius, -20.00, 20.00, 200.00, 830.00, Degrees)[artifact_id(ConverterId)]; // converts Celcius to binary degress based on the input scale
 	.print("Temperature Manifesting (moving robotic arm to): ", Degrees);
@@ -55,7 +53,7 @@ robot_td("https://raw.githubusercontent.com/Interactions-HSG/example-tds/main/td
 	 * follow the instructions here: https://github.com/HSG-WAS-SS23/exercise-8/blob/main/README.md#test-with-the-real-phantomx-reactor-robot-arm
 	 */
 	// creates a ThingArtifact based on the TD of the robotic arm
-	makeArtifact("leubot1", "wot.ThingArtifact", [Location, true], Leubot1Id); 
+	makeArtifact("leubot1", "wot.ThingArtifact", [Location, false], Leubot1Id); 
 	
 	// sets the API key for controlling the robotic arm as an authenticated user
 	setAPIKey("6dc1e80c14edf749e2ceb86d98ea1ca1")[artifact_id(leubot1)];

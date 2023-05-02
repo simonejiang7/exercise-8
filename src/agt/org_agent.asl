@@ -26,7 +26,6 @@ role(R,Super) :-
   joinWorkspace(OrgName,WspOrg);
 
   !setupOrg(OrgArtId);
-  // +lab_monitoring_org(OrgArtId);
 
   createGroup(GroupName, monitoring_team, GroupArtId)[artifact_name(OrgName)];
   debug(inspector_gui(on))[artifact_id(GroupArtId)];
@@ -36,7 +35,6 @@ role(R,Super) :-
   debug(inspector_gui(on))[artifact_id(SchArtId)];
   focus(SchArtId)[wid(WspOrg)];
 
-  // .wait(1500);
   ?formationStatus(ok)[artifact_id(GroupArtId)]; 
   addScheme(SchemeName)[artifact_id(GroupArtId)];
   .print("Scheme ", SchemeName, " added to group ", GroupName).
@@ -47,9 +45,6 @@ role(R,Super) :-
   focus(OrgArtId)[wid(WspOrg)];
   .broadcast(tell, new_organization_notification(OrgName)).
 
-
-// @test_goal_state_plan
-// +!play(agent, role, group)
 
 /* 
  * Plan for reacting to the addition of the test-goal ?formationStatus(ok)
@@ -64,20 +59,8 @@ role(R,Super) :-
   .print("Waiting for group ", GroupName," to become well-formed");
   .wait(15000);
   .print("Role ", R, " to be adopted ...");
-  // Specifically, every 15 seconds the agent infers whether there exist any roles for which the team does not have enough players.
-  // If there are such roles, the agent adopts the role of the first one and broadcasts a message to the group
- 
-
-  // .print("Group ", GroupName, "Adopted by ", AgentName, " as ", RoleName);
   .broadcast(tell, ask_agent_adopt_role(R, OrgName));
   .wait({+formationStatus(ok)[artifact_id(G)]}). // waits until the belief is added in the belief base
-
-// @test_formation_status_is_ok_plan
-// +?formationStatus(ok)[artifact_id(G)] : group(GroupName,_,G)[artifact_id(OrgName)] & play(AgentName, RoleName, GroupName)<-
-//   .print("Waiting for group ", GroupName," to become well-formed");
-//   .print("Group ", GroupName, "Adopted by ", AgentName, " as ", RoleName);
-//   // .broadcast(tell, ask_acting_agent_adopt(GroupName));
-//   .wait({+formationStatus(ok)[artifact_id(G)]}). // waits until the belief is added in the belief base
 
 /* 
  * Plan for reacting to the addition of the goal !inspect(OrganizationalArtifactId)
