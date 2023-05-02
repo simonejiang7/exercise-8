@@ -16,7 +16,23 @@ robot_td("https://raw.githubusercontent.com/Interactions-HSG/example-tds/main/td
 @start_plan
 +!start : true <-
 	.print("Hello world").
-	
+
++new_organization_notification(OrgName) : true <-
+	.print("Notified about new organization: ", OrgName);
+	joinWorkspace(OrgName,WspOrg);
+	lookupArtifact(OrgName, OrgId);
+	focus(OrgId).
+
++group(GroupName,_,GroupId)[artifact_id(OrgName)] : true <-
+	focus(GroupId);
+	.print("Notified about new group: ", GroupName).
+
+ +ask_agent_adopt_role(R, OrgName): group(GroupName,_,GroupId)[artifact_id(OrgName)] <-
+	adoptRole(R)[artifact_name(GroupName)];
+	.print("Adopted role: ", R);
+	.wait(5000);
+	!manifest_temperature.
+
 
 /* 
  * Plan for reacting to the addition of the goal !manifest_temperature
@@ -29,6 +45,7 @@ robot_td("https://raw.githubusercontent.com/Interactions-HSG/example-tds/main/td
 @manifest_temperature_plan 
 +!manifest_temperature : temperature(Celcius) & robot_td(Location) <-
 	.print("I will manifest the temperature: ", Celcius);
+	// .wait(5000);
 	makeArtifact("covnerter", "tools.Converter", [], ConverterId); // creates a converter artifact
 	convert(Celcius, -20.00, 20.00, 200.00, 830.00, Degrees)[artifact_id(ConverterId)]; // converts Celcius to binary degress based on the input scale
 	.print("Temperature Manifesting (moving robotic arm to): ", Degrees);

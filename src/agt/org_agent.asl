@@ -4,6 +4,9 @@
 org_name("lab_monitoring_org"). // the agent beliefs that it can manage organizations with the id "lab_monitoting_org"
 group_name("monitoring_team"). // the agent beliefs that it can manage groups with the id "monitoring_team"
 sch_name("monitoring_scheme"). // the agent beliefs that it can manage schemes with the id "monitoring_scheme"
+role(R,Super) :-
+   specification(os(_,G,_,_)) &
+   role(R,Super,G).
 
 /* Initial goals */
 !start. // the agent has the goal to start
@@ -33,14 +36,20 @@ sch_name("monitoring_scheme"). // the agent beliefs that it can manage schemes w
   debug(inspector_gui(on))[artifact_id(SchArtId)];
   focus(SchArtId)[wid(WspOrg)];
 
+  // .wait(1500);
   ?formationStatus(ok)[artifact_id(GroupArtId)]; 
   addScheme(SchemeName)[artifact_id(GroupArtId)];
   .print("Scheme ", SchemeName, " added to group ", GroupName).
 
+@setup_org_plan
 +!setupOrg(OrgArtId): org_name(OrgName) <-
   makeArtifact(OrgName, "ora4mas.nopl.OrgBoard", ["src/org/org-spec.xml"], OrgArtId)[wid(WspOrg)];
   focus(OrgArtId)[wid(WspOrg)];
   .broadcast(tell, new_organization_notification(OrgName)).
+
+
+// @test_goal_state_plan
+// +!play(agent, role, group)
 
 /* 
  * Plan for reacting to the addition of the test-goal ?formationStatus(ok)
@@ -49,10 +58,26 @@ sch_name("monitoring_scheme"). // the agent beliefs that it can manage schemes w
  * Body: if the belief formationStatus(ok)[artifact_id(G)] is not already in the agents belief base
  * the agent waits until the belief is added in the belief base
 */
+
 @test_formation_status_is_ok_plan
-+?formationStatus(ok)[artifact_id(G)] : group(GroupName,_,G)[artifact_id(OrgName)] <-
++?formationStatus(ok)[artifact_id(G)] : group(GroupName,_,G)[artifact_id(OrgName)] & role(R,Super)<-
   .print("Waiting for group ", GroupName," to become well-formed");
+  .wait(15000);
+  .print("Role ", R, " to be adopted ...");
+  // Specifically, every 15 seconds the agent infers whether there exist any roles for which the team does not have enough players.
+  // If there are such roles, the agent adopts the role of the first one and broadcasts a message to the group
+ 
+
+  // .print("Group ", GroupName, "Adopted by ", AgentName, " as ", RoleName);
+  .broadcast(tell, ask_agent_adopt_role(R, OrgName));
   .wait({+formationStatus(ok)[artifact_id(G)]}). // waits until the belief is added in the belief base
+
+// @test_formation_status_is_ok_plan
+// +?formationStatus(ok)[artifact_id(G)] : group(GroupName,_,G)[artifact_id(OrgName)] & play(AgentName, RoleName, GroupName)<-
+//   .print("Waiting for group ", GroupName," to become well-formed");
+//   .print("Group ", GroupName, "Adopted by ", AgentName, " as ", RoleName);
+//   // .broadcast(tell, ask_acting_agent_adopt(GroupName));
+//   .wait({+formationStatus(ok)[artifact_id(G)]}). // waits until the belief is added in the belief base
 
 /* 
  * Plan for reacting to the addition of the goal !inspect(OrganizationalArtifactId)
