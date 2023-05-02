@@ -18,23 +18,12 @@ my_role("temperature_reader").
 @start_plan
 +!start : true <-
 	.print("Hello world").
-	// !setup.
-
-// +!setup: true <-
-// 	lookupArtifact(OrgName, OrgArtId).
 
 +new_organization_notification(OrgName) : true <-
 	.print("Notified about new organization: ", OrgName);
+	joinWorkspace(OrgName,WspOrg);
 	lookupArtifact(OrgName, OrgId);
 	focus(OrgId).
-
-// + artifact_org_is(OrgName) : true <-
-// 	lookupArtifact(OrgName, OrgId);
-// 	.print("I am in the organization ", OrgName, " with id ", OrgArtId).
-
-// + group(GroupName,_,G)[artifact_id(OrgName)]: true <-
-// 	lookupArtifact(group(GroupName,_,G), GroupId)[wsp(OrgName)];
-// 	.print("I am in group ", GroupName, " in the organization ", OrgName).
 
 /* 
  * Plan for reacting to the addition of the goal !read_temperature
