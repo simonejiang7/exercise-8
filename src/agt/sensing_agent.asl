@@ -2,6 +2,9 @@
 
 
 /* Initial beliefs and rules */
+my_group(monitoring_team).
+my_scheme(monitoring_scheme).
+my_role("temperature_reader").
 
 /* Initial goals */
 !start. // the agent has the goal to start
@@ -15,6 +18,23 @@
 @start_plan
 +!start : true <-
 	.print("Hello world").
+	// !setup.
+
+// +!setup: true <-
+// 	lookupArtifact(OrgName, OrgArtId).
+
++new_organization_notification(OrgName) : true <-
+	.print("Notified about new organization: ", OrgName);
+	lookupArtifact(OrgName, OrgId);
+	focus(OrgId).
+
+// + artifact_org_is(OrgName) : true <-
+// 	lookupArtifact(OrgName, OrgId);
+// 	.print("I am in the organization ", OrgName, " with id ", OrgArtId).
+
+// + group(GroupName,_,G)[artifact_id(OrgName)]: true <-
+// 	lookupArtifact(group(GroupName,_,G), GroupId)[wsp(OrgName)];
+// 	.print("I am in group ", GroupName, " in the organization ", OrgName).
 
 /* 
  * Plan for reacting to the addition of the goal !read_temperature
@@ -22,6 +42,8 @@
  * Context: true (the plan is always applicable)
  * Body: reads the temperature using a weather station artifact and broadcasts the reading
 */
+
+
 @read_temperature_plan
 +!read_temperature : true <-
 	.print("I will read the temperature");

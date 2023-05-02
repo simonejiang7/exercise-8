@@ -16,6 +16,7 @@ robot_td("https://raw.githubusercontent.com/Interactions-HSG/example-tds/main/td
 @start_plan
 +!start : true <-
 	.print("Hello world").
+	
 
 /* 
  * Plan for reacting to the addition of the goal !manifest_temperature
@@ -40,7 +41,7 @@ robot_td("https://raw.githubusercontent.com/Interactions-HSG/example-tds/main/td
 	makeArtifact("leubot1", "wot.ThingArtifact", [Location, true], Leubot1Id); 
 	
 	// sets the API key for controlling the robotic arm as an authenticated user
-	//setAPIKey("77d7a2250abbdb59c6f6324bf1dcddb5")[artifact_id(leubot1)];
+	setAPIKey("6dc1e80c14edf749e2ceb86d98ea1ca1")[artifact_id(leubot1)];
 
 	// invokes the action onto:SetWristAngle for manifesting the temperature with the wrist of the robotic arm
 	invokeAction("https://ci.mines-stetienne.fr/kg/ontology#SetWristAngle", ["https://www.w3.org/2019/wot/json-schema#IntegerSchema"], [Degrees])[artifact_id(leubot1)].

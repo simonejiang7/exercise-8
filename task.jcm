@@ -8,4 +8,10 @@ mas lab {
     agent org_agent 
     agent sensing_agent 
     agent acting_agent
+
+    // workspace lab {
+    //     artifact org_agent
+    //     artifact sensing_agent
+    //     artifact acting_agent
+    // }
 }

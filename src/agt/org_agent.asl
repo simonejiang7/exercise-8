@@ -18,17 +18,27 @@ sch_name("monitoring_scheme"). // the agent beliefs that it can manage schemes w
 @start_plan
 +!start : org_name(OrgName) & group_name(GroupName) & sch_name(SchemeName) <-
   .print("Hello world");
+
   createWorkspace(OrgName);
   joinWorkspace(OrgName,WspOrg);
+
   makeArtifact(OrgName, "ora4mas.nopl.OrgBoard", ["src/org/org-spec.xml"], OrgArtId)[wid(WspOrg)];
   focus(OrgArtId)[wid(WspOrg)];
+
   createGroup(GroupName, monitoring_team, GroupArtId);
   debug(inspector_gui(on))[artifact_id(GroupArtId)];
   focus(GroupArtId)[wid(WspOrg)];
+  // lookupArtifact(GroupName, GroupId);
+  // lookupArtifact(OrgName, OrgId);
+  // .print("Group ", GroupName, " added to organization ", OrgName);
+
   createScheme(SchemeName, monitoring_scheme, SchArtId);
   debug(inspector_gui(on))[artifact_id(SchArtId)];
   focus(SchArtId)[wid(WspOrg)];
-  .broadcast(tell, org_name(OrgName)[artifact_id(OrgArtId)]);
+
+  .broadcast(tell, new_organization_notification(OrgName));
+  // .broadcast(tell, group_name(GroupName)[artifact_id(GroupArtId)]);
+  // .broadcast(tell, group(GroupName,_,G)[artifact_id(OrgName)]);
   ?formationStatus(ok)[artifact_id(GroupArtId)]; 
   addScheme(SchemeName)[artifact_id(GroupArtId)];
   .print("Scheme ", SchemeName, " added to group ", GroupName).
@@ -44,6 +54,9 @@ sch_name("monitoring_scheme"). // the agent beliefs that it can manage schemes w
 +?formationStatus(ok)[artifact_id(G)] : group(GroupName,_,G)[artifact_id(OrgName)] <-
   .print("Waiting for group ", GroupName," to become well-formed");
   .wait({+formationStatus(ok)[artifact_id(G)]}). // waits until the belief is added in the belief base
+
+// +?formationStatus(ok)[artifact_id(G)]
+//    <- .wait({+formationStatus(ok)[artifact_id(G)]}).
 
 /* 
  * Plan for reacting to the addition of the goal !inspect(OrganizationalArtifactId)
