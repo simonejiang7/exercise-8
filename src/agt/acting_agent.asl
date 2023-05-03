@@ -65,7 +65,7 @@ my_role("temperature_manifester").
 	
 	// sets the API key for controlling the robotic arm as an authenticated user
 	// setAPIKey("6dc1e80c14edf749e2ceb86d98ea1ca1")[artifact_id(leubot1)];
-	setAPIKey("77d7a2250abbdb59c6f6324bf1dcddb5")[artifact_id(leubot1)];
+	setAPIKey("96de20b94abf85072ae47105dad6f1a7")[artifact_id(leubot1)];
 
 	// invokes the action onto:SetWristAngle for manifesting the temperature with the wrist of the robotic arm
 	invokeAction("https://ci.mines-stetienne.fr/kg/ontology#SetWristAngle", ["https://www.w3.org/2019/wot/json-schema#IntegerSchema"], [Degrees])[artifact_id(leubot1)].
